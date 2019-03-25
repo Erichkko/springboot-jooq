@@ -61,7 +61,7 @@ public class AuthorController {
         return list;
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/selectAll")
+        @RequestMapping(method = RequestMethod.GET,value = "/selectAll")
     public List<Author> selectAll(){
         List<Author> list = authorService.selectAll(0, 10);
 
