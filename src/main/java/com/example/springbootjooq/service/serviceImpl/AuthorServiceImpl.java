@@ -44,14 +44,13 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author selectById(int id) {
-        Result result =  dsl.select(AUTHOR.ID,AUTHOR.FIRST_NAME,AUTHOR.LAST_NAME)
+        List<Author> result =  dsl.select()
                 .from(AUTHOR)
-                .where(AUTHOR.ID.eq(id)).fetch();
-        System.out.println(result.get(0).toString());
-        String className = result.get(0).getClass().getName();
-        System.out.println(className);
-//        com.fantj.pojos.User user = new com.fantj.pojos.User();
-        return null;
+                .where(AUTHOR.ID.eq(id))
+                .fetch()
+                .into(Author.class);
+
+        return result.get(0);
     }
 
     @Override

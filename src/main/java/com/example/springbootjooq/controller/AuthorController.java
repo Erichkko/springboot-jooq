@@ -3,6 +3,7 @@ package com.example.springbootjooq.controller;
 
 import com.example.springbootjooq.service.AuthorService;
 import com.generator.tables.pojos.Author;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+@Slf4j
 @RestController()
 public class AuthorController {
 
@@ -36,7 +38,9 @@ public class AuthorController {
 
     @RequestMapping(method = RequestMethod.GET,value = "/{id}/select")
     public Author select(@PathVariable("id")int id){
-        return authorService.selectById(id);
+        Author author = authorService.selectById(id);
+        log.error("author == "+author);
+        return author;
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "/selectAll/{pageNum}/{pageSize}")
