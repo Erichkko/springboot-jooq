@@ -1,6 +1,11 @@
 package com.example.springbootjooq.service.serviceImpl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.example.springbootjooq.constant.RedisConstant;
 import com.example.springbootjooq.service.AuthorService;
+import com.example.springbootjooq.util.RedisUtil;
 import com.generator.tables.pojos.Author;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
@@ -8,7 +13,9 @@ import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,7 +26,8 @@ import static com.generator.tables.Author.AUTHOR;
 public class AuthorServiceImpl implements AuthorService {
     @Autowired
     DSLContext dsl;
-
+    @Autowired
+    RedisUtil redisUtil;
     @Override
     public void delete(int id) {
         int flag = dsl.delete(AUTHOR).where(AUTHOR.ID.eq(id)).execute();
@@ -65,12 +73,29 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public  List<Author> selectAll(int pageNum, int pageSize) {
-        List<Author> list = dsl.select().from(AUTHOR)
-                .orderBy(AUTHOR.ID.desc())   //id倒序
-                .limit(pageSize)   //分页
-                .offset(pageNum)   //分页
-                .fetch()
-                .into(Author.class);  //数据类型格式转化
-        return list;
+
+        List<Author> configInfos = null;
+        String sysInfoMapJson = (String) redisUtil.get(RedisConstant.C_1);
+        if (!StringUtils.isEmpty(sysInfoMapJson)) {
+            try {
+                configInfos = JSON.parseObject(sysInfoMapJson,new TypeReference<List<Author>>(){});
+            } catch (Exception e) {
+                e.printStackTrace();
+                configInfos = null;
+            }
+        }
+
+        if (configInfos == null) {
+            configInfos =  dsl.select().from(AUTHOR)
+                    .orderBy(AUTHOR.ID.desc())   //id倒序
+                    .limit(pageSize)   //分页
+                    .offset(pageNum)   //分页
+                    .fetch()
+                    .into(Author.class);
+            redisUtil.set(RedisConstant.C_1 , JSON.toJSONString(configInfos));
+        }
+
+
+        return configInfos;
     }
 }
