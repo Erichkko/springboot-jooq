@@ -22,7 +22,13 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public void delete(int id) {
-        dsl.delete(AUTHOR).where(AUTHOR.ID.eq(id));
+        int flag = dsl.delete(AUTHOR).where(AUTHOR.ID.eq(id)).execute();
+        log.error("flag =="+flag);
+        if (flag == 1){
+            log.error("删除成功");
+        }else {
+            log.error("删除失败");
+        }
     }
 
     @Override
