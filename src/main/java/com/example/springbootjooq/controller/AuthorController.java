@@ -31,12 +31,23 @@ public class AuthorController {
         author.setLastName(" ==s");
         authorService.insert(author);
     }
-    @RequestMapping(method = RequestMethod.POST,value = "/update/{id}")
-    public void update(@RequestParam Author user){
-        authorService.update(user);
+    @RequestMapping(method = RequestMethod.GET,value = "/update/{id}")
+    public void update(@PathVariable("id")int id){
+        Author author = authorService.selectById(id);
+        log.error("author == "+author);
+        author.setFirstName("李");
+        author.setLastName("-科峰");
+       int flag =  authorService.update(author);
+       log.error("更新状态"+flag);
+       if (flag == 1){
+           log.error("更新成功！");
+       }else{
+           log.error("更新失败！");
+       }
+
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/{id}/select")
+    @RequestMapping(method = RequestMethod.GET,value = "/select/{id}")
     public Author select(@PathVariable("id")int id){
         Author author = authorService.selectById(id);
         log.error("author == "+author);

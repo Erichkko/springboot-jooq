@@ -38,8 +38,12 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public int update(Author user) {
-        dsl.update(AUTHOR).set((Record) user);
-        return 0;
+
+        return   dsl.update(AUTHOR)
+                .set(AUTHOR.FIRST_NAME, user.getFirstName())
+                .set(AUTHOR.LAST_NAME, user.getLastName())
+                .where(AUTHOR.ID.eq(user.getId())).execute();
+
     }
 
     @Override
