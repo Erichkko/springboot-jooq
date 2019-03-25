@@ -15,6 +15,7 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import org.jooq.Field;
+import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Schema;
@@ -38,7 +39,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Author extends TableImpl<AuthorRecord> {
 
-    private static final long serialVersionUID = 453854274;
+    private static final long serialVersionUID = -1792128100;
 
     /**
      * The reference instance of <code>library.author</code>
@@ -56,7 +57,7 @@ public class Author extends TableImpl<AuthorRecord> {
     /**
      * The column <code>library.author.id</code>.
      */
-    public final TableField<AuthorRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<AuthorRecord, Integer> ID = createField("id", org.jooq.impl.SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>library.author.first_name</code>.
@@ -111,6 +112,14 @@ public class Author extends TableImpl<AuthorRecord> {
     @Override
     public List<Index> getIndexes() {
         return Arrays.<Index>asList(Indexes.AUTHOR_PRIMARY);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Identity<AuthorRecord, Integer> getIdentity() {
+        return Keys.IDENTITY_AUTHOR;
     }
 
     /**

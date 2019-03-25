@@ -25,8 +25,8 @@ public class AuthorController {
     @RequestMapping(method = RequestMethod.GET,value = "/insert")
     public void insert(){
         Author author = new Author();
-        author.setFirstName("王"+ "5");
-        author.setLastName(" ==帅");
+        author.setFirstName("w"+ "5");
+        author.setLastName(" ==s");
         authorService.insert(author);
     }
     @RequestMapping(method = RequestMethod.POST,value = "/update/{id}")
@@ -41,11 +41,15 @@ public class AuthorController {
 
     @RequestMapping(method = RequestMethod.GET,value = "/selectAll/{pageNum}/{pageSize}")
     public List<Author> selectAll(@PathVariable("pageNum") int pageNum, @PathVariable("pageSize") int pageSize){
-        Iterator<Author> userIterator = authorService.selectAll(pageNum, pageSize);
-        List<Author> list = new ArrayList<>();
-        while(userIterator.hasNext()){
-            list.add(userIterator.next());
-        }
+        List<Author> list = authorService.selectAll(pageNum, pageSize);
+
+        return list;
+    }
+
+    @RequestMapping(method = RequestMethod.GET,value = "/selectAll")
+    public List<Author> selectAll(){
+        List<Author> list = authorService.selectAll(0, 10);
+
         return list;
     }
 }

@@ -10,24 +10,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
+import java.util.List;
+
+import static com.generator.tables.Author.AUTHOR;
 
 @Slf4j
 @Service
 public class AuthorServiceImpl implements AuthorService {
     @Autowired
     DSLContext dsl;
-    com.generator.tables.Author u =   com.generator.tables.Author.AUTHOR.as("a");
-
 
     @Override
     public void delete(int id) {
-        dsl.delete(u).where(u.ID.eq(id));
+        dsl.delete(AUTHOR).where(AUTHOR.ID.eq(id));
     }
 
     @Override
     public void insert(Author user) {
-        int flag = dsl.insertInto(u).
-                columns(u.FIRST_NAME,u.LAST_NAME).
+        int flag = dsl.insertInto(AUTHOR).
+                columns(AUTHOR.FIRST_NAME,AUTHOR.LAST_NAME).
                 values(user.getFirstName(),user.getLastName())
                 .execute();
 
@@ -37,15 +38,15 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public int update(Author user) {
-        dsl.update(u).set((Record) user);
+        dsl.update(AUTHOR).set((Record) user);
         return 0;
     }
 
     @Override
     public Author selectById(int id) {
-        Result result =  dsl.select(u.ID,u.FIRST_NAME,u.LAST_NAME)
-                .from(u)
-                .where(u.ID.eq(id)).fetch();
+        Result result =  dsl.select(AUTHOR.ID,AUTHOR.FIRST_NAME,AUTHOR.LAST_NAME)
+                .from(AUTHOR)
+                .where(AUTHOR.ID.eq(id)).fetch();
         System.out.println(result.get(0).toString());
         String className = result.get(0).getClass().getName();
         System.out.println(className);
@@ -54,8 +55,13 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Iterator<Author> selectAll(int pageNum, int pageSize) {
-        Result result = dsl.select().from(u).fetch();
-        return null;
+    public  List<Author> selectAll(int pageNum, int pageSize) {
+        List<Author> list = dsl.select().from(AUTHOR)
+                .orderBy(AUTHOR.ID.desc())   //id倒序
+                .limit(pageSize)   //分页
+                .offset(pageNum)   //分页
+                .fetch()
+                .into(Author.class);  //数据类型格式转化
+        return list;
     }
 }

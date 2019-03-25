@@ -4,6 +4,7 @@ import com.generator.tables.pojos.Author;
 import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
+import java.util.List;
 
 
 public interface AuthorService {
@@ -16,5 +17,5 @@ public interface AuthorService {
     /** 查询单个*/
     public Author selectById(int id);
     /** 查询全部列表*/
-    public Iterator<Author> selectAll(int pageNum, int pageSize);
+    public List<Author> selectAll(int pageNum, int pageSize);
 }
