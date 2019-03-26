@@ -47,7 +47,7 @@ public class AuthorController {
 
     }
 
-    @RequestMapping(method = RequestMethod.GET,value = "/select/{id}")
+    @RequestMapping(method = RequestMethod.GET,value = "/c/{id}")
     public Author select(@PathVariable("id")int id){
         Author author = authorService.selectById(id);
         log.error("author == "+author);

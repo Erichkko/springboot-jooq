@@ -62,13 +62,24 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author selectById(int id) {
-        List<Author> result =  dsl.select()
-                .from(AUTHOR)
-                .where(AUTHOR.ID.eq(id))
-                .fetch()
-                .into(Author.class);
+        Author author = null;
+        String redisStr = (String) redisUtil.get(RedisConstant.C_2);
+        if (!StringUtils.isEmpty(redisStr)){
+            author = JSON.parseObject(redisStr,Author.class);
+        }else {
+            List<Author> result =  dsl.select()
+                    .from(AUTHOR)
+                    .where(AUTHOR.ID.eq(id))
+                    .fetch()
+                    .into(Author.class);
+            if (result != null&&result.size() >0){
+                  author = result.get(0);
+                  redisUtil.set(RedisConstant.C_2,JSON.toJSONString(author));
+            }
+        }
 
-        return result.get(0);
+
+        return author;
     }
 
     @Override
